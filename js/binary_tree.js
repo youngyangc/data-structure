@@ -27,7 +27,7 @@ class BinaryTree {
     /**
      * 初始化构造
      * @param {Node} node 节点类
-     * @param {Function} compare 定义二叉树的排序规则默认排序数据为node.data
+     * @param {Function} compare 定义二叉树的排序规则默认排序数据为node.data (为了支持二叉树可以根据不同data类型数据进行插入)
      */
     constructor(node, compare) {
         this.root = node || null;
@@ -165,40 +165,121 @@ class BinaryTree {
     }
 
     /**
-     * 中序遍历
+     * 中序遍历 1.遍历左子树 2.访问根节点 3.遍历右子树 空间复杂度为O(n) 时间复杂度为 (n) 
+     * @method inOrderTraverse()
+     * @returns {Array} 
      */
     inOrderTraverse(){
-
+        let result = [];
+        this._inOrderTraverseNode(this.root,(node)=>{
+            result.push(node.data)
+        })
+        return result;
     }
 
     /**
-     * 先序遍历
+     * 中序遍历递归 
+     * @method _inOrderTraverseNode() 
+     * @param {Node} node 查询节点
+     * @param {Function} callback 回调操作函数针对node处理
      */
-    preOrederTraverse(){
-
+    _inOrderTraverseNode(node,callback){
+        if(node){
+            this._inOrderTraverseNode(node.leftChild,callback);//遍历左子树
+            callback(node)//获取当前node data
+            this._inOrderTraverseNode(node.rightChlid,callback);//遍历右子树
+        }
     }
 
     /**
-     * 后序遍历
+     * 先序遍历 1.访问根节点 2.访问左子树 3.访问右子树
+     * @method preOrderTraverse()
+     * @returns {Array}
+     */
+    preOrderTraverse(){
+        let result = [];
+        this._preOrderTraverseNode(this.root,(node)=>{
+            result.push(node.data)
+        })
+        return result;
+    }
+
+    /**
+     * 先序遍历递归 
+     * @method _preOrderTraverseNode() 
+     * @param {Node} node 查询节点 
+     * @param {Function} callback 回调操作函数针对node处理
+     */
+    _preOrderTraverseNode(node,callback){
+        if(node){
+            callback(node)//获取当前node data
+            this._preOrderTraverseNode(node.leftChild,callback);//遍历左子树
+            this._preOrderTraverseNode(node.rightChlid,callback);//遍历右子树
+        }
+    }
+
+    /**
+     * 后序遍历 1.访问左子树 2.访问右子树 3.访问根节点
+     * @method postOrderTraverse()
+     * @returns {Array}
      */
     postOrderTraverse(){
-
+        let result = [];
+        this._postOrderTraverse(this.root,(node)=>{
+            result.push(node.data)
+        })
+        return result;
     }
 
     /**
-     * 广度优先遍历
+     * 后序遍历递归
+     * @method _postOrderTraverse()
+     * @param {Node} node 查询节点 
+     * @param {Function} callback 回调操作函数针对node处理
+     */
+    _postOrderTraverse(node,callback){
+        if(node){
+            this._postOrderTraverse(node.leftChild,callback);//遍历左子树
+            this._postOrderTraverse(node.rightChlid,callback);//遍历右子树
+            callback(node)//获取当前node data
+        }
+    }
+
+    /**
+     * 广度优先遍历 从上层一层层往下遍历
+     * @returns {Array}
      */
     breadthFirstSearch(){
-
+        let result = [];
+        let content = [];
+        let cur_node = null;
+        content.push(this.root);
+        while(content.length){
+            cur_node = content.shift();
+            result.push(cur_node.data);
+            if(cur_node.leftChild) content.push(cur_node.leftChild);
+            if(cur_node.rightChlid) content.push(cur_node.rightChlid);
+        }
+        return result;
     }
 
     /**
-     * 判断检索值是否存在
+     * 检索指定data的节点
      * @param {Object} data 被检索值
      * @returns {Boolean}
      */
-    search(data){
-        return true;
+    searchNode(data){
+        let node = this.root;
+        while(node){
+            if(this.compare(node.data,data) === 0){
+                return node;
+            }else if(this.compare(node.data,data)<0){
+                node = node.rightChlid;
+            }else{
+                node = node.leftChild;
+            }
+        }
+        return null;
     }
 
     /**

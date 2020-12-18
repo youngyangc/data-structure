@@ -247,6 +247,7 @@ class BinaryTree {
 
     /**
      * 广度优先遍历 从上层一层层往下遍历
+     * @method breadthFirstSearch()
      * @returns {Array}
      */
     breadthFirstSearch(){
@@ -264,7 +265,27 @@ class BinaryTree {
     }
 
     /**
+     * 深度优先遍历 沿着左子树方向进行纵向遍历直到找到叶子节点为止
+     * @method deepFirstSearch()
+     * @returns {Array}
+     */
+    deepFirstSearch(){
+        let result = [];
+        let content = [];
+        let cur_node = null;
+        content.push(this.root);
+        while(content.length){
+            cur_node = content.pop();
+            result.push(cur_node.data);
+            if(cur_node.rightChlid) content.push(cur_node.rightChlid);
+            if(cur_node.leftChild) content.push(cur_node.leftChild);
+        }
+        return result;
+    }
+
+    /**
      * 检索指定data的节点
+     * @method searchNode()
      * @param {Object} data 被检索值
      * @returns {Boolean}
      */
